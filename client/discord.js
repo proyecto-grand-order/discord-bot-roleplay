@@ -22,6 +22,7 @@ export default class Discord extends Client {
 		await this.loadCommmands();
 		await this.onReady();
 		await this.onMessage();
+		await this.onUncaughtException();
 		await this.login(this.token);
 	}
 
@@ -39,6 +40,12 @@ export default class Discord extends Client {
      */
 	async onMessage() {
 		return this.on('messageCreate', EventMessage);
+	}
+
+	async onUncaughtException() {
+		return process.on('unhandledRejection', error => {
+			console.error('[!] Unhandled promise rejection:', error);
+		});
 	}
 
 	/**
