@@ -5,6 +5,7 @@ export default {
 	name: 'crearHabilidad',
 	description: 'Crea una habilidad',
 	aliases: ['crearhabilidad'],
+	permissions: ['ADMINISTRATOR', 'MANAGE_GUILD'],
 	/**
      * @param {import("discord.js").Message} message Message of the command
      * @param {import("../interfaces/RedisPrivder").RedisProviderMethods} db Database

@@ -1,6 +1,7 @@
 import { CommandClient, commands } from '../client/cache.js';
 import Database from '../database/redis.js';
 import layoutText from '../helper/layout.js';
+import { MessageEmbed } from 'discord.js';
 
 const cacheCommands = [];
 const cacheSkills = [];
@@ -13,7 +14,7 @@ export default async function(message) {
 	// If the message is from a bot, ignore it
 	if (message.author.bot) return;
 
-	if (!message.content.startsWith('!')) return;
+	if (!message.content.startsWith(process.env.prefix || '!')) return;
 
 
 	// Skill Section
@@ -39,9 +40,28 @@ export default async function(message) {
 
 	if (!hasCached) cacheCommands.push(...allCommands);
 
+	console.log(`[!] Command ${command}`);
+
 	const cmd = allCommands.find(c => c.name === command || c.aliases.includes(command));
 
 	if (!cmd) return;
+
+	if (cmd.guildOnly && message.channel.type !== 'text') {
+		const embed = new MessageEmbed()
+			.setColor('#ff0000')
+			.setDescription('Este comando solo se puede usar en canales de texto.');
+
+		return message.reply({ embeds: [embed] });
+	}
+
+	// If dont has permission, return
+	if (!message.member.permissions.has(cmd.permissions)) {
+		const embed = new MessageEmbed()
+			.setColor('#ff0000')
+			.setDescription('No tienes permisos suficientes para usar este comando.');
+
+		return message.reply({ embeds: [embed] });
+	}
 
 	// Run the command
 	cmd.execute(message, args, Database);

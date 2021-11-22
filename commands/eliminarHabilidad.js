@@ -4,6 +4,7 @@ export default {
 	name: 'eliminarHabilidad',
 	description: 'Elimina una habilidad de la base de datos',
 	aliases: ['eliminarhabilidad'],
+	permissions: ['ADMINISTRATOR', 'MANAGE_GUILD'],
 	/**
      * @param {import("discord.js").Message} message Message of the command
      * @param {import("../interfaces/RedisPrivder").RedisProviderMethods} db Database
