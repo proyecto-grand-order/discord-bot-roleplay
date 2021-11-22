@@ -1,0 +1,35 @@
+{
+  "name": "discord-bot-comision",
+  "version": "1.0.0",
+  "description": "Un bot de discord simple para un servidor roleplay",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js"
+  },
+  "keywords": [
+    "Discord"
+  ],
+  "engines": {
+    "node": "16"
+  },
+  "type": "module",
+  "author": "IsaacZM",
+  "license": "ISC",
+  "dependencies": {
+    "common-tags": "^1.8.2",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
+    "ioredis": "^4.28.0",
+    "node-fetch": "^2.6.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsdoc": "^37.0.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.1",
+    "nodemon": "^2.0.15"
+  }
+}
