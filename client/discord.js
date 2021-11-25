@@ -9,7 +9,7 @@ export default class Discord extends Client {
      * @param {string} token The bot token
      */
 	constructor(token) {
-		super({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+		super({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] });
 		this.token = token;
 		this.init();
 	}
