@@ -55,14 +55,14 @@ export default {
 	onlyGuild: false,
 	/**
 	 * @param {import("discord.js").Message} message - Message of the command
-	 * @param {import('../interfaces/RedisPrivder'.RedisProviderMethods)} db - Database
+	 * @param {import('../interfaces/RedisPrivder').RedisProviderMethods} db - Database
 	 */
 	async execute(message, 	_, db) {
 
 		try {
 			const time = 120000;
 			const embed = new MessageEmbed();
-			const filter = m => m.content;
+			let filter = m => m.content;
 
 			// Variables
 
@@ -81,6 +81,8 @@ export default {
 				alineamiento: false,
 				equipamiento: false,
 				poderes: false,
+				extra: false,
+				ostglobal: false,
 			};
 
 			const documento = {
@@ -98,256 +100,168 @@ export default {
 				alineamiento: '',
 				poderes: '',
 				equipamiento: '',
+				extra: '',
+				ostglobal: '',
+			};
+
+			// Funciones
+			const setData = async (key, EmbedEdit) => {
+				EmbedEdit();
+
+				await msg.edit({ embeds: [embed] });
+				documento[key] = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
+				again[key] = await confirm(msg, again.nombre);
+
+				while (again.nombre) {
+					EmbedEdit();
+					await msg.edit({ embeds: [embed] });
+					documento[key] = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
+					again[key] = await confirm(msg, again.nombre);
+				}
 			};
 
 			// Preguntas
 
 			embed.setColor('#0099ff');
-			embed.setTitle('Crear personaje');
-			embed.setDescription('Veo que quieres crear una ficha en cualquier momento puede escribir **cancelar** para cancelar este comando!');
 			embed.setFooter('Tienes dos minutos para responder cada pregunta tomate tu tiempo amigo!');
 			const msg = await message.author.send({ embeds: [embed] });
 
 			// Nombre y Apellidos
-			embed.setTitle('Nombre y Apellidos');
-			embed.setDescription('Escribe tu nombre y apellidos');
-
-			await msg.edit({ embeds: [embed] });
-			documento.nombre = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.nombre = await confirm(msg, again.nombre);
-
-			while (again.nombre) {
+			await setData('nombre', () => {
 				embed.setTitle('Nombre y Apellidos');
 				embed.setDescription('Escribe tu nombre y apellidos');
-
-				await msg.edit({ embeds: [embed] });
-				documento.nombre = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.nombre = await confirm(msg, again.nombre);
-			}
+			});
 
 			// Apodo
-			embed.setTitle('Apodo');
-			embed.setDescription('Escribe tu apodo');
-
-			await msg.edit({ embeds: [embed] });
-			documento.apodo = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.apodo = await confirm(msg, again.apodo);
-
-			while (again.apodo) {
+			await setData('apodo', () => {
 				embed.setTitle('Apodo');
 				embed.setDescription('Escribe tu apodo');
-
-				await msg.edit({ embeds: [embed] });
-				documento.apodo = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.apodo = await confirm(msg, again.apodo);
-			}
+			});
 
 			// Altura
-			embed.setTitle('Altura');
-			embed.setDescription('Escribe tu altura');
-
-			await msg.edit({ embeds: [embed] });
-			documento.altura = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.altura = await confirm(msg, again.altura);
-
-			while (again.altura) {
+			await setData('altura', () => {
 				embed.setTitle('Altura');
 				embed.setDescription('Escribe tu altura');
-
-				await msg.edit({ embeds: [embed] });
-				documento.altura = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.altura = await confirm(msg, again.altura);
-			}
+			});
 
 			// Peso (Aviso 300kg maximo)
-			embed.setTitle('Peso');
-			embed.setDescription('Escribe tu peso\n**Maximo 300kg**');
-
-			await msg.edit({ embeds: [embed] });
-			documento.peso = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.peso = await confirm(msg, again.peso);
-
-			while (again.peso) {
+			await setData('peso', () => {
 				embed.setTitle('Peso');
-				embed.setDescription('Escribe tu peso\n**Maximo 300kg**');
-
-				await msg.edit({ embeds: [embed] });
-				documento.peso = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.peso = await confirm(msg, again.peso);
-			}
+				embed.setDescription('Escribe tu peso\n*Maximo 300kg*');
+			});
 
 			// Edad
-			embed.setTitle('Edad');
-			embed.setDescription('Escribe tu edad');
-
-			await msg.edit({ embeds: [embed] });
-			documento.edad = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.edad = await confirm(msg, again.edad);
-
-			while (again.edad) {
+			await setData('edad', () => {
 				embed.setTitle('Edad');
 				embed.setDescription('Escribe tu edad');
-
-				await msg.edit({ embeds: [embed] });
-				documento.edad = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.edad = await confirm(msg, again.edad);
-			}
+			});
 
 			// Raza
-			embed.setTitle('Raza');
-			embed.setDescription('Escribe tu raza');
-
-			await msg.edit({ embeds: [embed] });
-			documento.raza = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.raza = await confirm(msg, again.raza);
-
-			while (again.raza) {
+			await setData('raza', () => {
 				embed.setTitle('Raza');
 				embed.setDescription('Escribe tu raza');
-
-				await msg.edit({ embeds: [embed] });
-				documento.raza = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.raza = await confirm(msg, again.raza);
-			}
+			});
 
 			// Genero
-			embed.setTitle('Genero');
-			embed.setDescription('Escribe tu genero');
-
-			await msg.edit({ embeds: [embed] });
-			documento.genero = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.genero = await confirm(msg, again.genero);
-
-			while (again.genero) {
+			await setData('genero', () => {
 				embed.setTitle('Genero');
 				embed.setDescription('Escribe tu genero');
-
-				await msg.edit({ embeds: [embed] });
-				documento.genero = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.genero = await confirm(msg, again.genero);
-			}
+			});
 
 			// Sexualidad
-			embed.setTitle('Sexualidad');
-			embed.setDescription('Escribe tu sexualidad \n*Orientación sexual*');
-
-			await msg.edit({ embeds: [embed] });
-			documento.sexualidad = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.sexualidad = await confirm(msg, again.sexualidad);
-
-			while (again.sexualidad) {
+			await setData('sexualidad', () => {
 				embed.setTitle('Sexualidad');
-				embed.setDescription('Escribe tu sexualidad \n*Orientación sexual*');
-
-				await msg.edit({ embeds: [embed] });
-				documento.sexualidad = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.sexualidad = await confirm(msg, again.sexualidad);
-			}
+				embed.setDescription('Escribe tu sexualidad\n*Orientación sexual*');
+			});
 
 			// Historia
-			embed.setTitle('Historia');
-			embed.setDescription('Escribe tu historia\n*Si es larga se envia al canal de lore-personaje*');
-
-			await msg.edit({ embeds: [embed] });
-			documento.historia = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.historia = await confirm(msg, again.historia);
-
-			while (again.historia) {
+			await setData('historia', () => {
 				embed.setTitle('Historia');
 				embed.setDescription('Escribe tu historia\n*Si es larga se envia al canal de lore-personaje*');
-
-				await msg.edit({ embeds: [embed] });
-				documento.historia = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.historia = await confirm(msg, again.historia);
-			}
+			});
 
 			// Alineamiento
-			embed.setTitle('Alineamiento');
-			embed.setDescription('Escribe tu alineamiento\n*Bueno, Malo, Neutral, Pacifico*');
+			filter = (m) => ['bueno', 'malo', 'neutral', 'pacifico'].includes(m.content.toLowerCase());
 
-			await msg.edit({ embeds: [embed] });
-			documento.alineamiento = await msg.channel.awaitMessages({ filter: (m) => ['bueno', 'malo', 'neutral', 'pacifico'].includes(m.content.toLowerCase()), max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.alineamiento = await confirm(msg, again.alineamiento);
-
-			while (again.alineamiento) {
+			await setData('alineamiento', () => {
 				embed.setTitle('Alineamiento');
 				embed.setDescription('Escribe tu alineamiento\n*Bueno, Malo, Neutral, Pacifico*');
+			});
 
-				await msg.edit({ embeds: [embed] });
-				documento.alineamiento = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.alineamiento = await confirm(msg, again.alineamiento);
-			}
+			filter = (m) => m.content;
 
 			// Debilidad
-			embed.setTitle('Debilidad');
-			embed.setDescription('Escribe tu debilidad\n*Mínimo una Debilidad Física lógica*');
-
-			await msg.edit({ embeds: [embed] });
-			documento.debilidad = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.debilidad = await confirm(msg, again.debilidad);
-
-			while (again.debilidad) {
+			await setData('debilidad', () => {
 				embed.setTitle('Debilidad');
 				embed.setDescription('Escribe tu debilidad\n*Mínimo una Debilidad Física lógica*');
-
-				await msg.edit({ embeds: [embed] });
-				documento.debilidad = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.debilidad = await confirm(msg, again.debilidad);
-			}
+			});
 
 			// Gustos
-			embed.setTitle('Gustos');
-			embed.setDescription('Escribe tu gustos');
-
-			await msg.edit({ embeds: [embed] });
-			documento.gustos = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.gustos = await confirm(msg, again.gustos);
-
-			while (again.gustos) {
+			await setData('gustos', () => {
 				embed.setTitle('Gustos');
-				embed.setDescription('Escribe tu gustos');
-
-				await msg.edit({ embeds: [embed] });
-				documento.gustos = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.gustos = await confirm(msg, again.gustos);
-			}
+				embed.setDescription('Escribe tus gustos\n*Mínimo un gusto*');
+			});
 
 			// Equipamiento
-			embed.setTitle('Equipamiento');
-			embed.setDescription('Escribe tu equipamiento\n*Si se trajo algo del mundo real, nada de armas de fuego ni objetos que no se puedan cargar*');
-
-			await msg.edit({ embeds: [embed] });
-			documento.equipamiento = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.equipamiento = await confirm(msg, again.equipamiento);
-
-			while (again.equipamiento) {
+			await setData('equipamiento', () => {
 				embed.setTitle('Equipamiento');
 				embed.setDescription('Escribe tu equipamiento\n*Si se trajo algo del mundo real, nada de armas de fuego ni objetos que no se puedan cargar*');
-
-				await msg.edit({ embeds: [embed] });
-				documento.equipamiento = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.equipamiento = await confirm(msg, again.equipamiento);
-			}
+			});
 
 			// Podedes
-			embed.setTitle('Poderes');
-			embed.setDescription('Escribe tus poderes\n*Solo se permite poderes del canal <#868247854060290099>*');
-
-			await msg.edit({ embeds: [embed] });
-			documento.poderes = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-			again.poderes = await confirm(msg, again.poderes);
-
-			while (again.poderes) {
+			await setData('poderes', () => {
 				embed.setTitle('Poderes');
-				embed.setDescription('Escribe tus poderes\n*Solo se permite poderes del canal <#868247854060290099>*');
+				embed.setDescription('Escribe tus poderes\n*Solo se permite poderes del canal <#868247854060290099>*\n*Maximo dos poderes*');
+			});
 
-				await msg.edit({ embeds: [embed] });
-				documento.poderes = await msg.channel.awaitMessages({ filter, max: 1, time, errors: ['time'] }).then(async (m) => m.first().content);
-				again.poderes = await confirm(msg, again.poderes);
-			}
+			// Extra
+			await setData('extra', () => {
+				embed.setTitle('Extra');
+				embed.setDescription('Escribe tu extra');
+			});
 
-			console.log(documento);
+			// Apariencia
+			await setData('apariencia', () => {
+				embed.setTitle('Apariencia');
+				embed.setDescription('Escribe tu apariencia\n*En caso de no ser una foto puede ser una descripción*');
+			});
+
+			// OTS global
+			await setData('ostglobal', () => {
+				embed.setTitle('OTS Global');
+				embed.setDescription('Escribe tu OTS global');
+			});
+
+			// OTS batalla/tensión
+			await setData('ostbatalla', () => {
+				embed.setTitle('OTS Batalla/Tensión');
+				embed.setDescription('Escribe tu OTS batalla/tensión');
+			});
+
+			// OTS sentimental
+			await setData('ostsentimental', () => {
+				embed.setTitle('OTS Sentimental');
+				embed.setDescription('Escribe tu OTS sentimental');
+			});
+
+			// Voz
+			await setData('voz', () => {
+				embed.setTitle('Voz');
+				embed.setDescription('Escribe un link, video o archivo, puede ser de cualquier PJ/Personaje');
+			});
+
+			// Guardad personaje en la base de datos
+			db.set(`${message.author.id}.personaje`, documento);
 			userWithYesAll.delete(message.author.id);
+
+			// Mensaje de confirmación
+			embed.setTitle('Personaje creado');
+			embed.setDescription('Personaje creado con éxito');
+			embed.setColor('#00ff00');
+			embed.setFooter('Personaje creado');
+			embed.setTimestamp();
+
+			msg.edit({ embeds: [embed] });
 		}
 
 
