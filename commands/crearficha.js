@@ -83,6 +83,9 @@ export default {
 				poderes: false,
 				extra: false,
 				ostglobal: false,
+				ostsentimental: false,
+				ostbatalla: false,
+				apariencia: false,
 			};
 
 			const documento = {
@@ -102,6 +105,9 @@ export default {
 				equipamiento: '',
 				extra: '',
 				ostglobal: '',
+				ostsentimental: '',
+				ostbatalla: '',
+				apariencia: '',
 			};
 
 			// Funciones
